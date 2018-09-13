@@ -1,0 +1,10 @@
+[Unit]
+Description=Fabio
+
+[Service]
+ExecStart=/usr/bin/fabio -cfg /etc/fabio.conf
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=network-online.target

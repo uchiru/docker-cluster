@@ -1,0 +1,33 @@
+---
+- file: path=/etc/consul state=directory
+
+- template: src=consul-client.json dest=/etc/consul
+  when: consul_client
+  notify: [restart consul]
+
+- template: src=consul-server.json dest=/etc/consul
+  when: consul_server
+  notify: [restart consul]
+
+- stat: path=/usr/bin/consul
+  register: bin_consul
+
+- name: unarchive consul
+  unarchive:
+    src: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
+    dest: /usr/bin
+    remote_src: True
+  when: bin_consul.stat.exists == False
+
+- name: consul systemd service
+  template:
+    src: consul.service
+    dest: /etc/systemd/system/consul.service
+
+- name: Install python-consul
+  pip: name=python-consul
+
+- name: start consul
+  systemd: state=started enabled=yes name=consul
+
+- meta: flush_handlers

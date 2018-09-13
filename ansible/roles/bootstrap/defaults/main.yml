@@ -1,0 +1,12 @@
+---
+docker_version: 17.03.1~ce-0~ubuntu-xenial
+node_exporter_version: 0.13.0
+consul_version: 0.9.3
+consul_server: no
+consul_client: no
+consul_join:
+nomad_version: 0.8.4
+nomad_server: no
+nomad_client: no
+apt_update_cache: no
+fabio_version: 1.5.8

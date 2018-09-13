@@ -1,0 +1,10 @@
+- import_tasks: system.yml
+- import_tasks: docker.yml
+- import_tasks: consul.yml
+  when: consul_client or consul_server
+- import_tasks: node_exporter.yml
+  when: consul_client or consul_server
+- import_tasks: fabio.yml
+  when: consul_client or consul_server
+- import_tasks: nomad.yml
+  when: nomad_client or nomad_server

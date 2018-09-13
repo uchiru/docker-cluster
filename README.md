@@ -50,10 +50,11 @@ export TF_VAR_USER=$OS_USERNAME
 10. Запустите докер контейнер с нужными утилитами с помощью команды:
 
 ```
-docker build -t ostack ostack && docker run -it \
+docker build -t tools tools && docker run -it \
   -w /w \
   -v `pwd`:/w \
-  ostack bash
+  -v $HOME/.ssh:/root/.ssh \
+  tools bash
 ```
 
 **NOTE:** все дальнейшие команды запускаются внутри контейнера.
@@ -72,7 +73,7 @@ glance image-list | grep 'Ubuntu 16.04 LTS 64-bit'
 export TF_VAR_ubuntu_1604_v1=<UUID из прошлого списка>
 ```
 
-**NOTE !!! Очень важно !!!**: Если вы захотите позднее добавить сервер на более свежем
+**NOTE**: Если вы захотите позднее добавить сервер на более свежем
 образе, то добавляйте новую переменную `..._v2`, `..._v3`, etc. Так как если поменять
 старую, то терраформ попробует пересоздать диск с нуля.
 
@@ -80,7 +81,7 @@ export TF_VAR_ubuntu_1604_v1=<UUID из прошлого списка>
 
 ### Терраформим сервера
 
-1. Создайте сервера
+15. Создайте сервера
 
 ```
 cd terraform
@@ -89,3 +90,90 @@ terraform plan
 terraform apply
 cd ..
 ```
+
+### Раскатываем ансиблом
+
+16. Добавьте в `.ssh/config`:
+
+```
+Host 192.168.99.*
+  ProxyCommand    ssh -W %h:%p root@<внешний IP-адрес главного сервера>
+```
+
+17. Раскатайте главный сервер:
+
+```
+cd ansible
+ansible-playbook main.yml
+cd ..
+```
+
+18. Теперь узлы:
+
+```
+cd ansible
+ansible-playbook node.yml
+cd ..
+```
+
+### Ставим софт
+
+19. Запустите номад-задачи:
+
+```
+cat nomad/registry.nomad | ssh root@192.168.99.4 nomad run -
+cat nomad/stats.nomad | ssh root@192.168.99.4 nomad run -
+cat nomad/db.nomad | ssh root@192.168.99.4 nomad run -
+cat nomad/prometheus.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+cat nomad/grafana.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+```
+
+**NOTE**: Данный кластер подходит **исключительно** для учебных задач,
+так как порты смотрят наружу и права внутри площадки никак не настроены.
+Для любого вида продакшенов или запуска сервисов с данными - использование данного кластера **категорически** запрещено!
+
+20. Посетите ссылки:
+
+* http://<внешний IP-адрес главного сервера>.xip.io:8500 - consul
+* http://<внешний IP-адрес главного сервера>.xip.io:4646 - nomad
+* http://<внешний IP-адрес главного сервера>.xip.io:9998 - таблица раутинга <a href="https://github.com/fabiolb/fabio">fabio</a>
+* http://prometheus.<внешний IP-адрес главного сервера>.xip.io:9999 - прометей
+* http://grafana.<внешний IP-адрес главного сервера>.xip.io:9999/d/all/all - графана
+
+### Деплой тестового приложения
+
+21. Запустите первую версию приложения:
+
+```
+cat nomad/demo-app-v1.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+```
+
+22. Проверьте, что приложение открывается, понаблюдайте за графаной:
+
+* http://demo-app.<внешний IP-адрес главного сервера>.xip.io:9999 - приложение v1
+* http://grafana.<внешний IP-адрес главного сервера>.xip.io:9999/d/demo/demo-app - графана
+
+23. Запустите битую версию приложения:
+
+```
+cat nomad/demo-app-v2.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+```
+
+24. Наблюдайте, как номад пытается поднять новую версию приложения:
+
+* http://grafana.<внешний IP-адрес главного сервера>.xip.io:9999/d/demo/demo-app - графана
+
+![](img/grafana1.png)
+
+25. Запустите исправленную версию приложения:
+
+```
+cat nomad/demo-app-v3.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+```
+
+26. Проверьте, что приложение 3-й версии открывается, понаблюдайте за графаной, как обновляются контейнеры:
+
+* http://demo-app.<внешний IP-адрес главного сервера>.xip.io:9999 - приложение v3
+* http://grafana.<внешний IP-адрес главного сервера>.xip.io:9999/d/demo/demo-app - графана
+
+![](img/grafana2.png)

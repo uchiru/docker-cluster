@@ -1,0 +1,43 @@
+---
+- stat: path=/opt/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+  register: node_exporter
+
+- stat: path=/usr/bin/node_exporter
+  register: bin_node_exporter
+
+- name: unarchive node_exporter
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt
+    remote_src: True
+  when: node_exporter.stat.exists == False
+
+- name: copy node_exporter
+  copy:
+    src: /opt/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+    dest: /usr/bin/node_exporter
+    remote_src: True
+    mode: 0755
+  when: bin_node_exporter.stat.exists == False
+
+- name: node_exporter systemd service
+  template:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+
+- name: start node_exporter
+  systemd: state=started enabled=yes name=node_exporter
+
+- name: node_exporter consul service
+  consul:
+    service_name: node_exporter
+    host: "127.0.0.1"
+    service_port: 9100
+  when: consul_client
+
+- name: node_exporter consul service
+  consul:
+    service_name: node_exporter
+    host: "{{ ansible_eth1.ipv4.address }}"
+    service_port: 9100
+  when: consul_server

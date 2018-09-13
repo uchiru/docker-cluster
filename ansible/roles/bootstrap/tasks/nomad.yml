@@ -1,0 +1,35 @@
+---
+- file: path=/etc/nomad state=directory
+
+- template: src=nomad-common.hcl dest=/etc/nomad/common.hcl
+  notify: [restart nomad]
+
+- template: src=nomad-client.hcl dest=/etc/nomad/client.hcl
+  when: nomad_client
+  notify: [restart nomad]
+
+- template: src=nomad-server.hcl dest=/etc/nomad/server.hcl
+  when: nomad_server
+  notify: [restart nomad]
+
+- stat: path=/usr/bin/nomad
+  register: bin_nomad
+
+- name: unarchive nomad
+  unarchive:
+    src: https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip
+    dest: /usr/bin
+    remote_src: True
+  when: bin_nomad.stat.exists == False
+  notify: [restart nomad]
+
+- name: nomad systemd service
+  template:
+    src: nomad.service
+    dest: /etc/systemd/system/nomad.service
+  notify: [restart nomad]
+
+- name: start nomad
+  systemd: state=started enabled=yes name=nomad
+
+- meta: flush_handlers

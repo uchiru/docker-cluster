@@ -1,0 +1,19 @@
+---
+- name: restart cron
+  service: name=cron state=restarted
+
+- name: docker restart with daemon-reload
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+
+- name: restart consul
+  service: name=consul state=restarted
+
+- name: restart nomad
+  service: name=nomad state=restarted
+
+- name: restart fabio
+  service: name=fabio state=restarted
+

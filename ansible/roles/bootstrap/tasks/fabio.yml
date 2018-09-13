@@ -1,0 +1,24 @@
+---
+- stat: path=/usr/bin/fabio
+  register: bin_fabio
+
+- name: unarchive fabio
+  get_url:
+    url: https://github.com/fabiolb/fabio/releases/download/v{{fabio_version}}/fabio-{{fabio_version}}-go1.10-linux_amd64
+    dest: /usr/bin/fabio
+    mode: 0755
+  when: bin_fabio.stat.exists == False
+
+- name: fabio config
+  template:
+    src: fabio.conf
+    dest: /etc/fabio.conf
+  notify: [restart fabio]
+
+- name: fabio systemd service
+  template:
+    src: fabio.service
+    dest: /etc/systemd/system/fabio.service
+
+- name: start fabio
+  systemd: state=started enabled=yes name=fabio

@@ -1,0 +1,37 @@
+---
+- name: Generate locales
+  locale_gen: name=en_US.UTF-8 state=present
+
+- name: set timezone to Europe/Moscow
+  timezone:
+    name: Europe/Moscow
+  notify: [restart cron]
+
+- name: Install common packages
+  apt: name={{ item }} state=present update_cache="{{apt_update_cache}}"
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - make
+    - ntp
+    - curl
+    - vim
+    - wget
+    - screen
+    - nmap
+    - htop
+    - iotop
+    - git
+    - zip
+    - unzip
+    - iftop
+    - iptraf
+    - logrotate
+    - apache2-utils
+    - aufs-tools
+    - jq
+    - gnupg-curl
+    - python-pip
+    - python-setuptools

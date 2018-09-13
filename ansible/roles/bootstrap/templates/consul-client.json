@@ -1,0 +1,8 @@
+{
+  "data_dir": "/opt/consul",
+  "log_level": "INFO",
+  "advertise_addr": "{{ ansible_eth0.ipv4.address }}",
+  "retry_join": [
+    "{{ master_servers[0] }}"
+  ]
+}

@@ -1,0 +1,17 @@
+---
+- name: Add key for docker
+  apt_key: keyserver=https://download.docker.com/linux/ubuntu/gpg id=0EBFCD88
+
+- name: Add repository for docker
+  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'
+
+- name: Install docker engine and another apt packages
+  apt: name=docker-ce={{ docker_version }} state=present update_cache="{{apt_update_cache}}"
+
+- name: Install docker-py
+  pip: name=docker-py
+
+- name: Copy config
+  copy: src="templates/docker.json" dest=/etc/docker/daemon.json
+  notify:
+    - docker restart with daemon-reload

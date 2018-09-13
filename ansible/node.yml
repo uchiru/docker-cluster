@@ -1,0 +1,8 @@
+---
+- hosts: node
+  user: root
+  roles:
+    - role: bootstrap
+      tags: [bootstrap]
+      consul_client: true
+      nomad_client: true
