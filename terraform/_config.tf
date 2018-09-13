@@ -45,3 +45,9 @@ resource "openstack_networking_router_interface_v2" "terraform" {
   subnet_id = "${openstack_networking_subnet_v2.terraform.id}"
   region    = "ru-1"
 }
+
+data "openstack_images_image_v2" "ubuntu_16_selectel" {
+  properties {
+    x_sel_image_source_file = "ubuntu-xenial-amd64-selectel-master-product-0.1.img"
+  }
+}
