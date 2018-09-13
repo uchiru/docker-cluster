@@ -61,7 +61,7 @@ docker build -t ostack ostack && docker run -it \
 
 ### Терраформим сервера
 
-1. Создать сервера
+1. Создайте сервера
 
 ```
 cd terraform
