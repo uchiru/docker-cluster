@@ -4,6 +4,8 @@
 
 ## Step by Step Guide
 
+https://kb.selectel.ru/22060499.html - база знаний облака Селектела.
+
 ### Подготовка
 
 1. Склонируйте данный репозитарий
@@ -34,7 +36,16 @@ export OS_PASSWORD=$OS_PASSWORD_INPUT
 
 ```
 export OS_PASSWORD=<пароль пользователя, прикрепленного к проекту>
+export TF_VAR_KEY_PAIR=<имя ssh-ключа>
+export TF_VAR_network01_id=<UUID публичной сети проекта>
+export TF_VAR_main01_public_ip=<внешний IP-адрес главного сервера из публичной сети>
+export TF_VAR_ACCOUNT_ID=$OS_PROJECT_DOMAIN_NAME
+export TF_VAR_PASSWORD=$OS_PASSWORD
+export TF_VAR_PROJ_ID=$OS_PROJECT_ID
+export TF_VAR_USER=$OS_USERNAME
 ```
+
+Note: из публичной сети `\29` доступно 5 адресов, самая простая мнемоника, если вам выдали сеть 5.189.236.216/29, то первый адрес CIDR + 2, то есть 5.189.236.218).
 
 10. Запустите докер контейнер с нужными утилитами с помощью команды:
 
@@ -50,12 +61,12 @@ docker build -t ostack ostack && docker run -it \
 
 ### Терраформим сервера
 
-1. Заполните в файле `terraform/_config.tf`
-  * `ACCOUNT_ID` - ваш аккаунт Селектела
-  * `PROJ_ID` - UUID проекта
-  * `USER` - имя созданного пользователя
-  * `PASSWORD` - пароль созданного пользователя
-  * `network01-id` - UUID публичной сети проекта
-  * `main01-public-ip` - внешний IP-адрес главного сервера из публичной сети (из публичной сети `\29` доступно 5 адресов, самая простая мнемоника, если вам выдали сеть 5.189.236.216/29, то первый адрес CIDR + 2, то есть 5.189.236.218).
+1. Создать сервера
 
-2. Получите актуальный UUID образа `Ubuntu 16.04 LTS 64-bit`
+```
+cd terraform
+terraform init
+terraform plan
+terraform apply
+cd ..
+```

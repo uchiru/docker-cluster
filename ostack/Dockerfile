@@ -7,7 +7,7 @@ RUN apt update && \
   pip install -UI pbr setuptools pytz && \
   pip install -UI git+https://github.com/openstack/python-openstackclient
 
-ENV TERRAFORM_VERSION=0.9.1
+ENV TERRAFORM_VERSION=0.11.8
 RUN curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin && \
     rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip

@@ -2,10 +2,11 @@ variable "ACCOUNT_ID"             { }
 variable "PROJ_ID"                { }
 variable "USER"                   { }
 variable "PASSWORD"               { }
-variable "SUBNET_CIDR"            { }
+variable "KEY_PAIR"               { }
+variable "SUBNET_CIDR"            { default = "192.168.99.0/24" }
 
-variable "network01-id"           { }
-variable "main01-public-ip"       { }
+variable "network01_id"           { }
+variable "main01_public_ip"       { }
 
 provider "openstack" {
   domain_name = "${var.ACCOUNT_ID}"
