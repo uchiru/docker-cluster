@@ -1,0 +1,11 @@
+#!/bin/bash
+cd "$(dirname "$0")/.."
+set -ex
+
+pushd ostack
+  docker build -t ostack .
+popd
+
+docker run -it \
+  -v `pwd`/rc.sh:/rc.sh \
+  ostack bash
