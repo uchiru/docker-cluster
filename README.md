@@ -36,6 +36,18 @@ export OS_PASSWORD=$OS_PASSWORD_INPUT
 export OS_PASSWORD=<пароль пользователя, прикрепленного к проекту>
 ```
 
+1. Запустите докер контейнер с нужными утилитами с помощью команды:
+
+```
+docker build -t ostack ostack && docker run -it \
+  -w /w \
+  -v `pwd`:/w \
+  ostack bash
+```
+
+1. Выполните в контейнере команду `source rc.sh`
+
+
 ### Терраформим сервера
 
 1. Заполните в файле `terraform/_config.tf`
