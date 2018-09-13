@@ -145,7 +145,9 @@ cat nomad/grafana.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh ro
 21. Запустите первую версию приложения:
 
 ```
-cat nomad/demo-app-v1.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+cat nomad/demo-app-v1.nomad | \
+  sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | \
+  ssh root@192.168.99.4 nomad run -
 ```
 
 22. Проверьте, что приложение открывается, понаблюдайте за графаной:
@@ -156,7 +158,9 @@ cat nomad/demo-app-v1.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ss
 23. Запустите битую версию приложения:
 
 ```
-cat nomad/demo-app-v2.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+cat nomad/demo-app-v2.nomad | \
+  sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | \
+  ssh root@192.168.99.4 nomad run -
 ```
 
 24. Наблюдайте, как номад пытается поднять новую версию приложения:
@@ -168,7 +172,9 @@ cat nomad/demo-app-v2.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ss
 25. Запустите исправленную версию приложения:
 
 ```
-cat nomad/demo-app-v3.nomad | sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | ssh root@192.168.99.4 nomad run -
+cat nomad/demo-app-v3.nomad | \
+  sed "s/__MAINIP__/$TF_VAR_main01_public_ip/g" | \
+  ssh root@192.168.99.4 nomad run -
 ```
 
 26. Проверьте, что приложение 3-й версии открывается, понаблюдайте за графаной, как обновляются контейнеры:
