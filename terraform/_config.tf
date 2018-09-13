@@ -1,11 +1,11 @@
-variable "ACCOUNT_ID"             { default = "TODO: set selectel account id, for example 84123" }
-variable "PROJ_ID"                { default = "TODO: set selectel project id, for example b02fbdf3d93b43f59ff8aace029f7480" }
-variable "USER"                   { default = "TODO: set selectel user" }
-variable "PASSWORD"               { default = "TODO: set selectel password" }
-variable "SUBNET_CIDR"            { default = "192.168.99.0/24" }
+variable "ACCOUNT_ID"             { }
+variable "PROJ_ID"                { }
+variable "USER"                   { }
+variable "PASSWORD"               { }
+variable "SUBNET_CIDR"            { }
 
-variable "network01-id"           { default = "TODO: set ID of public network" }
-variable "main01-public-ip"       { default = "TODO: assign IP from public network" }
+variable "network01-id"           { }
+variable "main01-public-ip"       { }
 
 provider "openstack" {
   domain_name = "${var.ACCOUNT_ID}"
