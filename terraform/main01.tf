@@ -6,7 +6,7 @@ resource "openstack_blockstorage_volume_v2" "disk-for-main01" {
   availability_zone = "ru-1b"
   size              = 30
   volume_type       = "basic.ru-1b"
-  image_id = "${data.openstack_images_image_v2.ubuntu_16_selectel.id}"
+  image_id          = "${var.ubuntu_1604_v1}"
 }
 
 resource "openstack_compute_instance_v2" "main01" {

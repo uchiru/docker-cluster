@@ -7,6 +7,7 @@ variable "SUBNET_CIDR"            { default = "192.168.99.0/24" }
 
 variable "network01_id"           { }
 variable "main01_public_ip"       { }
+variable "ubuntu_1604_v1"         { }
 
 provider "openstack" {
   domain_name = "${var.ACCOUNT_ID}"
@@ -34,20 +35,14 @@ resource "openstack_networking_subnet_v2" "terraform" {
 }
 
 resource "openstack_networking_router_v2" "terraform" {
-  name             = "nat-router"
-  admin_state_up   = "true"
-  region           = "ru-1"
-  external_gateway = "ab2264dd-bde8-4a97-b0da-5fea63191019"
+  name                = "nat-router"
+  admin_state_up      = "true"
+  region              = "ru-1"
+  external_network_id = "ab2264dd-bde8-4a97-b0da-5fea63191019"
 }
 
 resource "openstack_networking_router_interface_v2" "terraform" {
   router_id = "${openstack_networking_router_v2.terraform.id}"
   subnet_id = "${openstack_networking_subnet_v2.terraform.id}"
   region    = "ru-1"
-}
-
-data "openstack_images_image_v2" "ubuntu_16_selectel" {
-  properties {
-    x_sel_image_source_file = "ubuntu-xenial-amd64-selectel-master-product-0.1.img"
-  }
 }
