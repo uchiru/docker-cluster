@@ -1,7 +1,7 @@
 # Docker Cluster Tutorial
 
 * Казань 2018 - https://devopsdays.com.ru
-* DevOps Conf 2018 - http://devopsconf.io/
+* DevOps Conf 2018 - http://devopsconf.io
 
 ## Step by Step Guide
 
