@@ -3,6 +3,8 @@
 * Казань 2018 - https://devopsdays.com.ru
 * DevOps Conf 2018 - http://devopsconf.io
 
+**PROMO:** UCHIDEVOPS - 1000 рублей, активировать до 31 декабря 2018.
+
 ## Step by Step Guide
 
 https://kb.selectel.ru/22060499.html - база знаний облака Селектела.
