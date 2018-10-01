@@ -1,6 +1,7 @@
 # Docker Cluster Tutorial
 
-Поднимаем докер-кластер с использованием инструментов HashiCorp, Казань 2018
+* Казань 2018 - https://devopsdays.com.ru
+* DevOps Conf 2018 - http://devopsconf.io/
 
 ## Step by Step Guide
 
