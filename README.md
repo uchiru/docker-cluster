@@ -2,6 +2,7 @@
 
 * Казань 2018 - https://devopsdays.com.ru
 * DevOps Conf 2018 - http://devopsconf.io
+* SelectelMeetUp - https://selectel.timepad.ru/event/827687
 
 **PROMO:** UCHIDEVOPS - 1000 рублей, активировать до 31 декабря 2018.
 
